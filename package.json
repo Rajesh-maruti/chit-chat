@@ -1,7 +1,6 @@
 {
   "name": "web-chat",
   "version": "0.1.0",
-  "homepage": "https://rajesh-maruti.github.io/chit-chat",
   "private": true,
   "dependencies": {
     "@emotion/react": "^11.14.0",
