@@ -1,6 +1,5 @@
 import Box from "@mui/material/Box";
 import UserList, { UserDataType } from "./UserList";
-import Input from "../MessageContainer/UserInput/MessageActions";
 import UserListInput from "./UserListActions/UserListInput";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../store";
@@ -53,27 +52,34 @@ const UserContainer = () => {
 
   return (
     <Box position="relative" height="100vh" overflow="auto">
-      <Box
-        position="sticky"
-        top={0}
-        zIndex={1}
-        sx={{ backgroundColor: "#f0f0f0" }}
-      >
-        <UserListInput onValueChange={handleSearchUser} />
+      <Box p={2}>
+        <Box
+          position="sticky"
+          top={0}
+          zIndex={1}
+          sx={{ backgroundColor: "#f0f0f0" }}
+        >
+          <UserListInput onValueChange={handleSearchUser} />
+        </Box>
+        {loading && (
+          <Box display="flex" alignItems="center" justifyContent="center">
+            <CircularProgress />
+          </Box>
+        )}
+        {hasData && !loading && <UserList data={data} />}
+        {!hasData && !loading && (
+          <Box
+            display="flex"
+            alignItems="center"
+            justifyContent="center"
+            height="90vh"
+          >
+            <Typography color="#5a5858">
+              Please clear filter or try to add user to your chat list.
+            </Typography>
+          </Box>
+        )}
       </Box>
-      {loading && (
-        <Box display="flex" alignItems="center" justifyContent="center">
-          <CircularProgress />
-        </Box>
-      )}
-      {hasData && !loading && <UserList data={data} />}
-      {!hasData && !loading && (
-        <Box px={3}>
-          <Typography color="#5a5858">
-            Please clear filter or try to add user to your chat list.
-          </Typography>
-        </Box>
-      )}
     </Box>
   );
 };

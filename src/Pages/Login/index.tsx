@@ -1,6 +1,5 @@
 import { Button, Typography } from "@mui/material";
 import Box from "@mui/material/Box";
-import CardContent from "@mui/material/CardContent";
 import { useState } from "react";
 import "react-phone-input-2/lib/style.css";
 import LoginIcon from "@mui/icons-material/Login";
@@ -10,6 +9,7 @@ import CardView from "../../Layout/CardView";
 import { manageUser } from "../../functions/firebase/manageUser";
 import toast from "../../functions/toast";
 import { phoneNumberFunctions } from "../../functions/firebase/phoneNumberFunctions";
+
 const Login = () => {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [loading, setIsLoading] = useState(false);
@@ -25,13 +25,15 @@ const Login = () => {
 
   const handleSubmit = async () => {
     setIsLoading(true);
-    const isExistedUser = await manageUser.phoneNumberExist(phoneNumber);
+    const isExistedUser = await manageUser.phoneNumberExist(`91${phoneNumber}`);
     if (!isExistedUser) {
-      return toast.error("User not registered! Please signup.");
+      toast.error("User not registered! Please signup.");
+      setIsLoading(false);
+      return;
     }
     phoneNumberFunctions.invisbleCaptcha("signInButton");
     phoneNumberFunctions.sendCodeToUserPhone(
-      "+" + phoneNumber,
+      "+91" + phoneNumber,
       handleSuccessOtp,
       loadingComlpetes
     );
@@ -50,6 +52,7 @@ const Login = () => {
           sx={{ width: "100%", fontWeight: "bold", fontSize: "16px" }}
           onClick={handleSubmit}
           loading={loading}
+          disabled={phoneNumber.length !== 10}
           id="signInButton"
         >
           Login <LoginIcon />

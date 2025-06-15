@@ -1,7 +1,5 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
-import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -16,15 +14,15 @@ const firebaseConfig = {
   messagingSenderId: "70989627400",
   appId: "1:70989627400:web:78f8ee330b8b11f631d1bd",
   measurementId: "G-V8SF9Z62JW",
-//   rules_version = '2';
+  //   rules_version = '2';
 
-// // service firebase.storage {
-// //   match /b/{bucket}/o {
-// //     match /{allPaths=**} {
-// //       allow read, write: if false;
-// //     }
-// //   }
-// }
+  // // service firebase.storage {
+  // //   match /b/{bucket}/o {
+  // //     match /{allPaths=**} {
+  // //       allow read, write: if false;
+  // //     }
+  // //   }
+  // }
 };
 
 // Initialize Firebase

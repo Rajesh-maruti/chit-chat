@@ -6,21 +6,30 @@ import Divider from "@mui/material/Divider";
 import { useDispatch, useSelector } from "react-redux";
 import { updateActiveUser } from "../../../store/reducerSlices/activeUserSlice";
 import { RootState } from "../../../store";
-import { useCallback, useEffect, useState } from "react";
-import { manageUser } from "../../../functions/firebase/manageUser";
-import { updateUsers } from "../../../store/reducerSlices/userSlice";
+import { useCallback, useEffect, useMemo, useRef } from "react";
 import useMessageStatus from "../../../functions/firebase/useMessageStatus";
 import { UserDataType } from ".";
+import Badge from "@mui/material/Badge";
+import MailIcon from "@mui/icons-material/Mail";
+import useSound from "use-sound";
+import incomingSound from "../../../sound/incomingMessage.mp3";
+import UpdateUser from "./UpdateUser";
 
 const User = (props: { user: UserDataType }) => {
   const dispatch = useDispatch();
+  const isPreviousObjectLoaded = useRef(false);
+
   const handleActiveUser = async (user: UserDataType) => {
     dispatch(updateActiveUser(user));
+    isPreviousObjectLoaded.current = false;
   };
+  const [play] = useSound(incomingSound);
+  const activeUser = useSelector((state: RootState) => state.activeUser.value);
   const loggedInUser = useSelector((state: RootState) => state.account.value);
   const messageOverview = useSelector(
     (state: RootState) => state.messageStatus.value
   );
+
   const uid = [loggedInUser?.phoneNumber, props.user.phoneNumber]
     .sort()
     .join("");
@@ -59,6 +68,23 @@ const User = (props: { user: UserDataType }) => {
     return "sent";
   }, [messageOverview, uid]);
 
+  const lastMessage = useMemo(
+    () => messageOverview[uid]?.lastMessage,
+    [messageOverview, uid]
+  );
+
+  useEffect(() => {
+    if (
+      isPreviousObjectLoaded.current &&
+      lastMessage?.sentBy !== loggedInUser?.phoneNumber
+    ) {
+      play();
+    }
+    if (lastMessage?.id) {
+      isPreviousObjectLoaded.current = true;
+    }
+  }, [lastMessage, loggedInUser?.phoneNumber, play]);
+
   return (
     <Box
       key={props.user.name}
@@ -95,13 +121,35 @@ const User = (props: { user: UserDataType }) => {
         <Grid size={3}>
           <Box sx={{ textAlign: "right" }}>
             <Box fontSize="small" color="gray">
-              {props.user.time}
+              {messageOverview[uid]?.time}
             </Box>
-            <Box fontSize="small" color="gray">
+            <Box
+              display="flex"
+              alignItems="center"
+              justifyContent="center"
+              fontSize="small"
+              color="gray"
+            >
               {messageOverview[uid]?.lastMessagedBy ===
                 loggedInUser?.phoneNumber && (
                 <MessageStatus status={getMessageStatus()} />
               )}
+              {messageOverview[uid]?.lastMessagedBy !==
+                loggedInUser?.phoneNumber &&
+                messageOverview[uid]?.delivered - messageOverview[uid]?.read >
+                  0 &&
+                activeUser?.phoneNumber !== props.user.phoneNumber && (
+                  <Badge
+                    badgeContent={
+                      messageOverview[uid]?.delivered -
+                      messageOverview[uid]?.read
+                    }
+                    color="secondary"
+                  >
+                    <MailIcon color="action" />
+                  </Badge>
+                )}
+              <UpdateUser user={props.user} />
             </Box>
           </Box>
         </Grid>

@@ -3,9 +3,13 @@ import { UserDataType } from "../UserContainer/UserList";
 import UserAvatar from "../shared/Avatar/userAvatar";
 import useGetOnlineStatus from "../../hooks/useGetOnlineStatus";
 import { useCallback, useEffect, useState } from "react";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import { useDispatch } from "react-redux";
+import { updateActiveUser } from "../../store/reducerSlices/activeUserSlice";
 
 const ActiveUserHeader = (props: { user: UserDataType }) => {
   const { getUserStatus, OnStatusChange } = useGetOnlineStatus();
+  const dispatch = useDispatch();
   const [isOnline, setIsOnline] = useState(false);
 
   const getOnlineStatus = useCallback(async () => {
@@ -32,6 +36,17 @@ const ActiveUserHeader = (props: { user: UserDataType }) => {
           minHeight: "30px",
         }}
       >
+        <Box
+          sx={{ display: { md: "none", xs: "block" }, cursor: "pointer" }}
+          onClick={() => {
+            document.body.scrollIntoView({
+              behavior: "smooth", // Smooth scrolling effect
+            });
+            dispatch(updateActiveUser(null));
+          }}
+        >
+          <ArrowBackIcon />
+        </Box>
         <UserAvatar image={props.user.image} name={props.user.name} />
         <Box>
           <Box fontWeight="bold">{props.user.name}</Box>

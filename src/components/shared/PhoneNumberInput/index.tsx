@@ -9,6 +9,7 @@ const PhoneNumberInput = (props: PhoneInputProps) => {
       placeholder="Enter phone number"
       value={value}
       autoFormat
+      onlyCountries={["in"]}
       disableCountryCode
       disableDropdown
       onChange={setValue}

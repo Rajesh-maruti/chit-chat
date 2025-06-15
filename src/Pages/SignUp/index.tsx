@@ -1,25 +1,13 @@
 import { Button, Typography } from "@mui/material";
 import Box from "@mui/material/Box";
-import CardContent from "@mui/material/CardContent";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import "react-phone-input-2/lib/style.css";
 import Input from "../../components/shared/Input";
 import PhoneNumberInput from "../../components/shared/PhoneNumberInput";
 import { phoneNumberFunctions } from "../../functions/firebase/phoneNumberFunctions";
 import toast from "../../functions/toast";
-import { RecaptchaVerifier } from "firebase/auth";
 import { Link, useNavigate } from "react-router";
 import CardView from "../../Layout/CardView";
-import { db } from "../../functions/firebase";
-import {
-  collection,
-  doc,
-  getDoc,
-  getDocs,
-  query,
-  setDoc,
-  where,
-} from "firebase/firestore";
 import { manageUser } from "../../functions/firebase/manageUser";
 
 const SignUp = () => {
@@ -47,15 +35,16 @@ const SignUp = () => {
   };
 
   const handleSubmit = async () => {
+    setIsLoading(true);
     const isMobileNumberRegistered = !!(await manageUser.phoneNumberExist(
       `91${formState.phoneNumber}`
     ));
-
     if (isMobileNumberRegistered) {
-      return toast.error("Mobile Number registered! Please login");
+      toast.error("Mobile Number registered! Please login");
+      setIsLoading(false);
+      return;
     }
 
-    setIsLoading(true);
     handleCaptchaVerification();
     phoneNumberFunctions.sendCodeToUserPhone(
       "+91" + formState.phoneNumber,
@@ -79,7 +68,6 @@ const SignUp = () => {
         }
       />
       <PhoneNumberInput
-        onlyCountries={["in"]}
         value={formState.phoneNumber}
         onChange={(e) => {
           setFormState((prev) => ({

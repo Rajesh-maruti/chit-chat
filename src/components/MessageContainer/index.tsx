@@ -2,15 +2,9 @@ import Box from "@mui/material/Box";
 import ActiveUserHeader from "../ActiveUserHeader";
 import { UserDataType } from "../UserContainer/UserList";
 import MessageBlock from "./MessageContent";
-import Input from "./UserInput/MessageActions";
-import Emoji from "../shared/Emoji";
-import { MouseDownEvent } from "emoji-picker-react/dist/config/config";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../store";
-import {
-  addMessage,
-  updatePreviousMessage,
-} from "../../store/reducerSlices/chatSlice";
+import { updatePreviousMessage } from "../../store/reducerSlices/chatSlice";
 import useScrollIntoView, { ElementEnum } from "../../hooks/useScrollIntoView";
 import { useCallback, useEffect, useRef, useState } from "react";
 import UserInput from "./UserInput";
@@ -55,7 +49,7 @@ const MessageContainer = (props: { activeUser?: UserDataType | null }) => {
 
   const getChatList = useCallback(async () => {
     const chats = await getChats(`${props.activeUser?.phoneNumber!}`);
-    dispatch(updatePreviousMessage(chats));
+    dispatch(updatePreviousMessage(chats.data));
     setIsLoadedPreviousMessage(true);
   }, [dispatch, getChats, props.activeUser?.phoneNumber]);
 

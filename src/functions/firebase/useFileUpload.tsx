@@ -4,7 +4,6 @@ import {
   uploadBytesResumable,
   getDownloadURL,
   StorageReference,
-  StorageError,
 } from "firebase/storage";
 import uploadHelper from "./uploadHelper";
 

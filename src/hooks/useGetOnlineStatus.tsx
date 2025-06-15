@@ -1,10 +1,4 @@
-import {
-  get,
-  getDatabase,
-  onChildAdded,
-  onChildChanged,
-  ref,
-} from "firebase/database";
+import { get, getDatabase, onChildChanged, ref } from "firebase/database";
 import { useCallback } from "react";
 
 const useGetOnlineStatus = () => {

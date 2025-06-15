@@ -1,15 +1,11 @@
-import {
-  getAuth,
-  onAuthStateChanged,
-  updateProfile,
-  User,
-} from "firebase/auth";
+import { getAuth, onAuthStateChanged, User } from "firebase/auth";
 import {
   collection,
   doc,
   getDocs,
   query,
   setDoc,
+  updateDoc,
   where,
 } from "firebase/firestore";
 import { db } from ".";
@@ -64,12 +60,18 @@ export const manageUser = {
       return {
         name: data.name || data.mobileNumber,
         image: data.image,
-        lastMessage: "",
-        time: "",
-        messageStatus: "delivered",
         phoneNumber: data.mobileNumber,
+        id: each.id,
       } satisfies UserDataType;
     });
+  },
+
+  updateUserName: function (
+    phoneNumber: string,
+    id: string,
+    newData: UserDataType
+  ) {
+    return updateDoc(doc(db, "chatUsersList" + phoneNumber, id), newData);
   },
 
   addNewUserToChat: async function (
@@ -90,19 +92,19 @@ export const manageUser = {
 
   reloadUserList: (phoneNumber: string) => {
     const db = getDatabase();
-    const postListRef = ref(db, `reload-userlist-${phoneNumber}`);
-    set(postListRef, { reload: true });
+    const reference = ref(db, `reload-userlist-${phoneNumber}`);
+    set(reference, { reload: true });
   },
 
-  onNewReload: (phoneNumber: string, relaodCallback: () => void) => {
+  onNewReload: (phoneNumber: string, reloadCallBack: () => void) => {
     const db = getDatabase();
-    const postListRef = ref(db, `reload-userlist-${phoneNumber}`);
-    set(postListRef, { reload: false });
-    const commentsRef = ref(db, `reload-userlist-${phoneNumber}`);
-    onChildChanged(commentsRef, (data) => {
+    const reference = ref(db, `reload-userlist-${phoneNumber}`);
+    set(reference, { reload: false });
+    onChildChanged(reference, (data) => {
       if (data) {
-        relaodCallback();
+        reloadCallBack();
       }
+      set(reference, { reload: false });
     });
   },
 };

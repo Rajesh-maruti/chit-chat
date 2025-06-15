@@ -7,6 +7,7 @@ export type MessageOverviewType = {
   lastMessagedBy: string;
   lastMessage: ChatType;
   uid: string;
+  time: string;
 };
 const initialState: {
   value: { [key: string]: MessageOverviewType };

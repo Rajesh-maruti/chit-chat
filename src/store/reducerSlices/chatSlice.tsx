@@ -10,7 +10,6 @@ export const chatSlice = createSlice({
   initialState,
   reducers: {
     addMessage: (state, action) => {
-      console.log(state.value,'statestate')
       state.value.push(action.payload);
     },
 

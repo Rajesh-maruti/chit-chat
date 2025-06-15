@@ -1,5 +1,4 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { UserCredential } from "firebase/auth";
 
 const initialState: {
   value: any;

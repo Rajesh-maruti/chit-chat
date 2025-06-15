@@ -11,6 +11,7 @@ const CardView = (props: { children: ReactNode }) => {
       justifyContent="center"
       alignItems="center"
       overflow="hidden"
+      px={4}
     >
       <Box
         sx={{

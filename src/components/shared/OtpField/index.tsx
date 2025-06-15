@@ -1,13 +1,12 @@
 import Box from "@mui/material/Box";
-import TextField from "@mui/material/TextField";
-import Input from "../Input";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Otp from "./Otp";
 import { Button } from "@mui/material";
 
-const OtpField = (props: { onSubmit: (otp: string) => void }) => {
+const OtpField = (props: { onSubmit: (otp: string) => Promise<void> }) => {
   const [otps, setOtps] = useState(["", "", "", "", "", ""]);
   const [focusedIndex, setFocusedIndex] = useState(0);
+  const [loading, setIsLoading] = useState(false);
 
   const handleKeyDown = (e: React.KeyboardEvent, index: number) => {
     let temp = [...otps];
@@ -54,7 +53,12 @@ const OtpField = (props: { onSubmit: (otp: string) => void }) => {
         variant="contained"
         color="secondary"
         disabled={otps.includes("")}
-        onClick={() => props.onSubmit(otps.join(""))}
+        loading={loading}
+        onClick={async () => {
+          setIsLoading(true);
+          await props.onSubmit(otps.join(""));
+          setIsLoading(false);
+        }}
       >
         Verify
       </Button>

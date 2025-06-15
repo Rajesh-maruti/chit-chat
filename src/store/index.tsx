@@ -40,9 +40,7 @@ export const store = configureStore({
     account: reHydrateStore()?.account,
   },
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware({
-      serializableCheck: false,
-    }).concat(authMiddleware),
+    getDefaultMiddleware().concat(authMiddleware),
 });
 
 export type RootState = ReturnType<typeof store.getState>;

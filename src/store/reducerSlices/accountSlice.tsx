@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { IdTokenResult, User } from "firebase/auth";
+import { User } from "firebase/auth";
 
 export type AccountSlice = { value: User | null };
 const initialState: AccountSlice = { value: null };

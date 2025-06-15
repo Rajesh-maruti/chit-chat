@@ -1,8 +1,6 @@
 import { useSelector } from "react-redux";
-import { manageUser } from "../functions/firebase/manageUser";
 import { RootState } from "../store";
-import { useCallback, useEffect } from "react";
-import { doc } from "@firebase/firestore";
+import { useEffect } from "react";
 import { getDatabase, onDisconnect, ref, set } from "firebase/database";
 
 const useUpdateOnlineStatus = () => {

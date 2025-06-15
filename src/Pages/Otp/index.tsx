@@ -13,9 +13,9 @@ import { updateAccount } from "../../store/reducerSlices/accountSlice";
 import { manageUser } from "../../functions/firebase/manageUser";
 
 const Otp = () => {
-  const [q, f] = useSearchParams();
-  const name = q.get("name");
-  const phoneNumber = q.get("phoneNumber");
+  const q = useSearchParams();
+  const name = q[0].get("name");
+  const phoneNumber = q[0].get("phoneNumber");
 
   const dispatch = useDispatch();
   const navigator = useNavigate();
@@ -25,7 +25,7 @@ const Otp = () => {
       const usersRef = collection(db, "users");
       await setDoc(doc(usersRef), {
         name: name,
-        mobileNumber: phoneNumber,
+        mobileNumber: phoneNumber.trim(),
       });
       toast.success("User Registered!");
     }
@@ -36,17 +36,15 @@ const Otp = () => {
     });
   };
 
-  const handleOtpSubmission = (otp: string) => {
-    phoneNumberFunctions.signInWithVerificationCode(
+  const handleOtpSubmission = async (otp: string) => {
+    await phoneNumberFunctions.signInWithVerificationCode(
       otp,
-      onOtpSuccessfulVerification,
-      (e) => {
-      }
+      onOtpSuccessfulVerification
     );
   };
   return (
     <CardView>
-      <Typography variant="h6" fontStyle="italic">
+      <Typography variant="h6" color="secondary" fontWeight="bold">
         Enter OTP
       </Typography>
       <Typography variant="body2" color="text.secondary">

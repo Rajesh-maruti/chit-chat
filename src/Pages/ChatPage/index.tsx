@@ -1,12 +1,10 @@
 import Grid from "@mui/material/Grid";
-import UserList from "../../components/UserContainer/UserList";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../store";
 import MessageContainer from "../../components/MessageContainer";
 import { Box, Typography } from "@mui/material";
 import UserContainer from "../../components/UserContainer";
 import { useCallback, useEffect } from "react";
-import { manageUser } from "../../functions/firebase/manageUser";
 import useUpdateOnlineStatus from "../../hooks/useUpdateOnlineStatus";
 import useMessageStatus from "../../functions/firebase/useMessageStatus";
 import {
@@ -29,11 +27,10 @@ const ChatPage = () => {
         userList.map((each) => getMessageStatus(each.phoneNumber))
       )
     ).filter((each) => each);
-    console.log(data,'messageStatus data')
+
     data.forEach((each) => {
       messageStatus[each.uid] = each;
     });
-    console.log(messageStatus,'messageStatus')
     dispatch(setAllMessageStatus(messageStatus));
   }, [dispatch, getMessageStatus, userList]);
 
@@ -53,7 +50,10 @@ const ChatPage = () => {
             <UserContainer />
           </Box>
         </Grid>
-        <Grid size={{ xs: 12, md: 8 }}>
+        <Grid
+          size={{ xs: 12, md: 8 }}
+          sx={!activeUser.value ? { display: { xs: "none", md: "block" } } : {}}
+        >
           {activeUser.value ? (
             <MessageContainer activeUser={activeUser.value} />
           ) : (

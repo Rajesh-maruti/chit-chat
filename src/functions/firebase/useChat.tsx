@@ -1,11 +1,7 @@
 import {
-  child,
-  get,
   getDatabase,
   limitToLast,
-  off,
   onChildAdded,
-  onValue,
   push,
   query,
   ref,
@@ -15,37 +11,54 @@ import firebase from ".";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../store";
 import { ChatType } from "../../components/MessageContainer/MessageContent";
-import { useCallback } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import { addMessage } from "../../store/reducerSlices/chatSlice";
+import { MessageOverviewType } from "../../store/reducerSlices/messageStatusSlice";
+import usePagination from "../../hooks/usePagination";
 
 const useChat = () => {
   const phone = useSelector(
     (state: RootState) => state.account.value?.phoneNumber
   );
+  const lastMessageData = useRef<{ [key: string]: MessageOverviewType }>({});
+  const messageOverView = useSelector(
+    (state: RootState) => state.messageStatus.value
+  );
+  const { getPreviousData } = usePagination();
+
+  useEffect(() => {
+    lastMessageData.current = messageOverView;
+  }, [messageOverView]);
+
   const dispatch = useDispatch();
-  const updateChat = function (message: {}, senderPhone: string) {
+
+  const updateChat = function (message: ChatType, senderPhone: string) {
     const combinedUid = [phone, senderPhone].sort().join("");
     const db = getDatabase(firebase);
     const postListRef = ref(db, `chats/${combinedUid}`);
     const newPostRef = push(postListRef);
     set(newPostRef, message);
+    const chatStatusRef = ref(db, `chats-message-status-${combinedUid}`);
+    const previousData = lastMessageData.current[combinedUid];
+    const status = {
+      delivered: previousData.delivered,
+      read: previousData.read,
+      lastMessagedBy: phone,
+      lastMessage: message,
+      uid: combinedUid,
+    };
+    set(chatStatusRef, status);
   };
 
   const getChats = useCallback(
     async function (phoneNumber: string) {
-      const dbRef = ref(getDatabase());
+      const db = getDatabase();
       const combinedUid = [phone, phoneNumber].sort().join("");
-      const chats = await get(child(dbRef, `chats/${combinedUid}`));
-      if (chats.exists()) {
-        const data: Array<ChatType> = [];
-        chats.forEach((each) => {
-          data.push(each.val());
-        });
-        return data;
-      }
-      return [];
+      const chatsRef = ref(db, `chats/${combinedUid}`);
+      const data = await getPreviousData(chatsRef);
+      return { data, getPreviousData };
     },
-    [phone]
+    [getPreviousData, phone]
   );
 
   const onNewMessage = useCallback(
@@ -58,8 +71,9 @@ const useChat = () => {
       );
       let loaded = false;
       const eventListener = onChildAdded(commentsRef, (data) => {
+        const chat: ChatType = data.val();
         if (loaded) {
-          dispatch(addMessage(data.val()));
+          dispatch(addMessage(chat));
         }
         loaded = true;
       });

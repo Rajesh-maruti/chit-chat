@@ -1,6 +1,5 @@
 import {
   getAuth,
-  createUserWithEmailAndPassword,
   RecaptchaVerifier,
   signInWithPhoneNumber,
   ConfirmationResult,
@@ -62,7 +61,7 @@ export const phoneNumberFunctions = {
     onSingIn: (data: UserCredential) => void,
     onerror?: (error: any) => void
   ) {
-    window.confirmationResult
+    return window.confirmationResult
       ?.confirm(code)
       .then((result) => {
         toast.success("OTP Validated!!");

@@ -14,7 +14,7 @@ const UserAvatar = (props: {
   if (!props.image)
     return (
       <Avatar sx={props.randomBg ? { backgroundColor: bg } : {}}>
-        {props?.name?.charAt(0)}
+        {props?.name?.charAt(0) === "+" ? undefined : props?.name?.charAt(0)}
       </Avatar>
     );
   return <Avatar src={props.image} alt={props.name} />;

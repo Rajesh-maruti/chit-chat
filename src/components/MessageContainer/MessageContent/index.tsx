@@ -27,7 +27,6 @@ const MessageBlock = (props: {
   const user = useSelector((state: RootState) => state.account.value);
   const isSentMessage = props.chat?.sentBy === user?.phoneNumber;
 
-
   const getMessageStatus: (messageId: number) => MessageStatusTypes =
     useCallback(
       (messageId: number) => {

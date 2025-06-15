@@ -6,9 +6,9 @@ import Input from "../../shared/Input";
 import { manageUser } from "../../../functions/firebase/manageUser";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../store";
-import { Button, CircularProgress, Dialog, Modal, Stack } from "@mui/material";
+import { CircularProgress } from "@mui/material";
 import toast from "../../../functions/toast";
-import AddUserToChat from "./AddNewUser";
+import AddUserToChat from "./ReNameOrAddUserToChat";
 
 const UserListInput = (props: { onValueChange?: (value: string) => void }) => {
   const [inputValue, setInputValue] = useState("");
@@ -28,7 +28,7 @@ const UserListInput = (props: { onValueChange?: (value: string) => void }) => {
   }, [inputValue]);
 
   return (
-    <Box display="flex" alignItems="center" gap={1} p={2}>
+    <Box display="flex" alignItems="center" gap={1}>
       <Input
         placeholder="Search/Add User!!"
         value={inputValue}
@@ -45,7 +45,7 @@ const UserListInput = (props: { onValueChange?: (value: string) => void }) => {
         }
         onClick={async () => {
           if (userData?.phoneNumber === `${searchedPhoneNumber}`) return;
-          if (searchedPhoneNumber.length !== 10) {
+          if (inputValue.length !== 10) {
             return toast.error("Mobile number is not valid.");
           }
           setLoading(true);

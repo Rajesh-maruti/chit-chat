@@ -8,7 +8,7 @@ import {
   ref,
   set,
 } from "firebase/database";
-import { useCallback, useMemo, useRef } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import { RootState } from "../../store";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -24,6 +24,14 @@ const useMessageStatus = () => {
   const activeUserPhoneNumber = useSelector(
     (state: RootState) => state.activeUser.value?.phoneNumber
   );
+  const messageOverView = useSelector(
+    (state: RootState) => state.messageStatus.value
+  );
+  const lastMessageData = useRef<{ [key: string]: MessageOverviewType }>({});
+
+  useEffect(() => {
+    lastMessageData.current = messageOverView;
+  }, [messageOverView]);
 
   const dispatch = useDispatch();
 
@@ -43,12 +51,10 @@ const useMessageStatus = () => {
       const db = getDatabase();
       const combinedUid = [phone, phoneNumber].sort().join("");
       const statusRef = ref(db, `chats-message-status-${combinedUid}`);
-      onChildChanged(statusRef, (data) => {
-        getMessageStatus(phoneNumber).then(
-          (previousData: MessageOverviewType) => {
-            dispatch(updateMessageStatus(previousData));
-          }
-        );
+      onChildChanged(statusRef, () => {
+        getMessageStatus(phoneNumber).then((status: MessageOverviewType) => {
+          dispatch(updateMessageStatus(status));
+        });
       });
     },
     [dispatch, getMessageStatus, phone]
@@ -62,24 +68,22 @@ const useMessageStatus = () => {
       onChildAdded(statusRef, (data) => {
         const db = getDatabase();
         if (data.val().sentBy === phone) return;
-        getMessageStatus(phoneNumber).then(
-          (previousData: MessageOverviewType) => {
-            const postListRef = ref(db, `chats-message-status-${combinedUid}`);
-            const isActiveChat = activeUserPhoneNumber === phoneNumber;
-            const messageOverView: ChatType = data.val();
-            const status = {
-              delivered: messageOverView.id,
-              read: isActiveChat ? messageOverView.id : previousData?.read || 0,
-              lastMessagedBy: phoneNumber,
-              lastMessage: messageOverView,
-              uid: combinedUid,
-            };
-            set(postListRef, status);
-          }
-        );
+
+        const previousData = lastMessageData.current[combinedUid];
+        const postListRef = ref(db, `chats-message-status-${combinedUid}`);
+        const isActiveChat = activeUserPhoneNumber === phoneNumber;
+        const messageOverView: ChatType = data.val();
+        const status = {
+          delivered: messageOverView.id,
+          read: isActiveChat ? messageOverView.id : previousData?.read || 0,
+          lastMessagedBy: phoneNumber,
+          lastMessage: messageOverView,
+          uid: combinedUid,
+        };
+        set(postListRef, status);
       });
     },
-    [activeUserPhoneNumber, getMessageStatus, phone]
+    [activeUserPhoneNumber, phone]
   );
 
   return { getMessageStatus, updateStatusOnNewMessage, onUpdateStatus };

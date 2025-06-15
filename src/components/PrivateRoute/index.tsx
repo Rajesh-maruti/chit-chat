@@ -1,10 +1,9 @@
-import { JSX, useEffect, useState } from "react";
+import { JSX, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../store";
 import { useNavigate } from "react-router";
-import { getAuth, UserCredential } from "firebase/auth";
+import { getAuth } from "firebase/auth";
 import toast from "../../functions/toast";
-import { login } from "../../store/reducerSlices/loginSlice";
 
 const PrivateRoute = (props: { Component: JSX.Element }) => {
   const loginData = useSelector((state: RootState) => state.login.value);
