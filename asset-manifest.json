@@ -1,18 +1,18 @@
 {
   "files": {
-    "main.css": "/rajesh-maruti.github.io/chit-chat/static/css/main.57279396.css",
-    "main.js": "/rajesh-maruti.github.io/chit-chat/static/js/main.763f89a7.js",
-    "static/js/885.0c2385b4.chunk.js": "/rajesh-maruti.github.io/chit-chat/static/js/885.0c2385b4.chunk.js",
-    "static/js/453.06e504ca.chunk.js": "/rajesh-maruti.github.io/chit-chat/static/js/453.06e504ca.chunk.js",
-    "static/media/incomingMessage.mp3": "/rajesh-maruti.github.io/chit-chat/static/media/incomingMessage.ffde444316b21e830c34.mp3",
-    "index.html": "/rajesh-maruti.github.io/chit-chat/index.html",
-    "main.57279396.css.map": "/rajesh-maruti.github.io/chit-chat/static/css/main.57279396.css.map",
-    "main.763f89a7.js.map": "/rajesh-maruti.github.io/chit-chat/static/js/main.763f89a7.js.map",
-    "885.0c2385b4.chunk.js.map": "/rajesh-maruti.github.io/chit-chat/static/js/885.0c2385b4.chunk.js.map",
-    "453.06e504ca.chunk.js.map": "/rajesh-maruti.github.io/chit-chat/static/js/453.06e504ca.chunk.js.map"
+    "main.css": "/chit-chat/static/css/main.57279396.css",
+    "main.js": "/chit-chat/static/js/main.cac8a288.js",
+    "static/js/885.0c2385b4.chunk.js": "/chit-chat/static/js/885.0c2385b4.chunk.js",
+    "static/js/453.06e504ca.chunk.js": "/chit-chat/static/js/453.06e504ca.chunk.js",
+    "static/media/incomingMessage.mp3": "/chit-chat/static/media/incomingMessage.ffde444316b21e830c34.mp3",
+    "index.html": "/chit-chat/index.html",
+    "main.57279396.css.map": "/chit-chat/static/css/main.57279396.css.map",
+    "main.cac8a288.js.map": "/chit-chat/static/js/main.cac8a288.js.map",
+    "885.0c2385b4.chunk.js.map": "/chit-chat/static/js/885.0c2385b4.chunk.js.map",
+    "453.06e504ca.chunk.js.map": "/chit-chat/static/js/453.06e504ca.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.57279396.css",
-    "static/js/main.763f89a7.js"
+    "static/js/main.cac8a288.js"
   ]
 }
